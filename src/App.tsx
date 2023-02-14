@@ -1,34 +1,33 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import React, { useState } from 'react';
+import { AvailableItems } from './components/AvailableItems';
+import { items as itemsMock } from './mocks/items';
+import { ItemProps } from './types';
+import { Collection } from './components/Collection/Collection';
+
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [collectionItems, setCollectionItems] = useState<ItemProps[]>([]);
+  const addItem = (newItem: ItemProps) => {
+    setCollectionItems((items) => {
+      if (items.find((item) => item.imgUrl === newItem.imgUrl)) {
+        return items;
+      }
+
+      return [...items, newItem];
+    });
+  };
+
+  const removeItem = (removedItem: ItemProps) => {
+    setCollectionItems((items) => items.filter((item) => item.imgUrl !== removedItem.imgUrl));
+  };
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div className="app-wrapper">
+      <AvailableItems items={itemsMock} handleClick={addItem} />
+      <Collection name="My fav pics" items={collectionItems} handleRemove={removeItem} />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
